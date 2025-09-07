@@ -7,14 +7,12 @@ x-common-variables: &common-variables
   CELERY_BROKER_URL: 'redis://redis:6379/0'
   CELERY_RESULT_BACKEND: 'redis://redis:6379/0'
   CELERY_ENABLED: "True"
+  PG_NAME: starter
+  PG_USER: admin
+  PG_PASSWORD: UNSAFE_PASSWORD
+  PG_HOST: postgres
+  PG_PORT: 5432
 services:
-  hostmods:
-    build:
-      context: .
-      dockerfile: Dockerfile.hostmods
-    volumes:
-      - .:/workspace:cached
-
   web:
     user: $UID:$GID
     tmpfs: /tmp
@@ -38,6 +36,8 @@ services:
       - 8000:8000
     environment:
       <<: *common-variables
+    depends_on:
+      - postgres
 
   celery-worker:
     user: $UID:$GID
@@ -71,8 +71,18 @@ services:
     ports:
       - 6379:6379
 
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: UNSAFE_PASSWORD
+      POSTGRES_DB: starter
+    command: postgres -c 'max_connections=1000'
+    volumes:
+      - dev_postgres:/var/lib/postgresql/data
+
 
 volumes:
   dev_node_modules:
-  dev_nuxt:
+  dev_postgres:
   dev_pnpm_store:

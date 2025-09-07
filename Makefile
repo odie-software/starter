@@ -1,5 +1,5 @@
 all: env build restart
-build: api web db modules
+build: api web modules
 start: restart
 
 env:

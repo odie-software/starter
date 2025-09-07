@@ -55,9 +55,9 @@ interface MenuItem {
 
 const menuItems = ref([
   {
-    label: 'Time Tracking',
-    icon: 'mdi-clock-outline',
-    to: '/time-tracking'
+    label: 'Home',
+    icon: 'mdi-home',
+    to: '/'
   }
 ]) as Ref<MenuItem[]>
 
