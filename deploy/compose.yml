@@ -1,0 +1,93 @@
+x-common-variables: &common-variables
+  # General
+  SECRET_KEY: 'CHANGE_ME_PROD'
+  DEPLOYMENT_CONTEXT: "production"
+  DEBUG: "False"
+
+  # Postgres
+  PG_HOST: starter-postgres
+  PG_NAME: starter
+  PG_USER: admin
+  PG_PASSWORD: UNSAFE_PASSWORD
+  PG_PORT: 5432
+
+  # Redis
+  REDIS_CACHE_URL: 'redis://starter-redis:6379/1'
+
+  # Celery
+  CELERY_BROKER_URL: 'redis://starter-redis:6379/0'
+  CELERY_RESULT_BACKEND: 'redis://starter-redis:6379/0'
+  CELERY_ENABLED: "True"
+
+services:
+  web:
+    container_name: starter-web
+    user: $UID:$GID
+    build:
+      context: ../web/
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+
+  backend:
+    container_name: starter-api
+    user: $UID:$GID
+    build:
+      context: ../api/
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    environment:
+      <<: *common-variables
+    depends_on:
+      - postgres
+      - redis
+
+  celery-worker:
+    container_name: starter-celery-worker
+    user: $UID:$GID
+    build:
+      context: ../api/
+      dockerfile: Dockerfile
+    entrypoint: /app/bin/celery-worker
+    environment:
+      <<: *common-variables
+    depends_on:
+      - backend
+
+  celery-beat:
+    container_name: starter-celery-beat
+    user: $UID:$GID
+    build:
+      context: ../api/
+      dockerfile: Dockerfile
+    entrypoint: /app/bin/celery-beat
+    environment:
+      <<: *common-variables
+    depends_on:
+      - backend
+
+  postgres:
+    container_name: starter-postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: UNSAFE_PASSWORD
+      POSTGRES_DB: starter
+    command: postgres -c 'max_connections=1000'
+    volumes:
+      - starter_postgres:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+
+  redis:
+    container_name: starter-redis
+    user: $UID:$GID
+    image: redis:latest
+    ports:
+      - 6379:6379
+
+volumes:
+  starter_postgres:

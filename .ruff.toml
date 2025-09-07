@@ -1,0 +1,8 @@
+# python 3.13+
+target-version = "py313"
+
+# exclude __init__ files
+extend-exclude = ["__init__.py", "src/bad.py"]
+
+[lint]
+select = ["F", "E4", "E7", "E9", "I", "ANN", "DJ"]

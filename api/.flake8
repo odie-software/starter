@@ -1,0 +1,9 @@
+[flake8]
+max-line-length = 88
+# ignores whitespace before ':', line too long (idrc), line break before binary file operator
+extend-ignore = E203, E501, W503
+
+exclude =
+    __pycache__
+    venv
+    migrations
