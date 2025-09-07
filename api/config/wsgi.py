@@ -1,5 +1,5 @@
 """
-WSGI config for thymius project.
+WSGI config for Starter project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

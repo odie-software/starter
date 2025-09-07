@@ -1,5 +1,5 @@
 """
-celery config for thymius project.
+celery config for Starter project.
 
 Sets up the celery beat schedule for the application, which determines when to run periodic tasks for the application.
 

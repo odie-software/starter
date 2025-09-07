@@ -2,7 +2,7 @@
   <q-layout class="bg-white flex">
     <q-header elevated>
       <q-toolbar>
-        <q-toolbar-title>Thymius
+        <q-toolbar-title>Starter
         </q-toolbar-title>
         <q-spacer />
 
